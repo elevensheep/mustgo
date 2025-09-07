@@ -1,11 +1,10 @@
 spring.application.name=tastyload
 
-# Supabase PostgreSQL Database Configuration (Transaction Pooler)
-# 환경변수를 사용하거나 기본값을 설정할 수 있습니다
-spring.datasource.url=${DATABASE_URL:jdbc:postgresql://aws-1-ap-northeast-2.pooler.supabase.com:6543/postgres}
+# Supabase PostgreSQL Database Configuration (Direct Connection)
+spring.datasource.url=${DATABASE_URL:jdbc:postgresql://your-project.pooler.supabase.com:5432/postgres}
 spring.datasource.driverClassName=org.postgresql.Driver
-spring.datasource.username=${DATABASE_USERNAME:postgres.wzijimhnmumkxoswivzs}
-spring.datasource.password=${DATABASE_PASSWORD:[YOUR-PASSWORD]}
+spring.datasource.username=${DATABASE_USERNAME:your-database-username}
+spring.datasource.password=${DATABASE_PASSWORD:your-database-password}
 
 # JPA/Hibernate Configuration
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
@@ -13,8 +12,49 @@ spring.jpa.hibernate.ddl-auto=update
 spring.jpa.show-sql=true
 spring.jpa.properties.hibernate.format_sql=true
 
+# Prepared Statement 설정 (PostgreSQL Transaction Pooler 호환)
+spring.jpa.properties.hibernate.jdbc.batch_size=0
+spring.jpa.properties.hibernate.order_inserts=true
+spring.jpa.properties.hibernate.order_updates=true
+spring.jpa.properties.hibernate.jdbc.batch_versioned_data=true
+spring.jpa.properties.hibernate.jdbc.lob.non_contextual_creation=true
+
 # Connection Pool Configuration
-spring.datasource.hikari.maximum-pool-size=10
-spring.datasource.hikari.minimum-idle=5
+spring.datasource.hikari.maximum-pool-size=5
+spring.datasource.hikari.minimum-idle=1
 spring.datasource.hikari.connection-timeout=20000
 spring.datasource.hikari.idle-timeout=300000
+spring.datasource.hikari.leak-detection-threshold=60000
+spring.datasource.hikari.pool-name=TastyLoadPool
+spring.datasource.hikari.connection-test-query=SELECT 1
+spring.datasource.hikari.validation-timeout=3000
+
+# Swagger/OpenAPI Configuration
+springdoc.api-docs.path=/api-docs
+springdoc.swagger-ui.path=/swagger-ui.html
+springdoc.swagger-ui.enabled=true
+springdoc.swagger-ui.operationsSorter=method
+springdoc.swagger-ui.tagsSorter=alpha
+
+# Supabase Configuration
+supabase.url=${SUPABASE_URL:https://your-project-ref.supabase.co}
+supabase.anon.key=${SUPABASE_ANON_KEY:your-anon-key-here}
+supabase.service.key=${SUPABASE_SERVICE_KEY:your-service-key-here}
+
+# JWT는 Supabase에서 관리됩니다
+
+# Server Configuration
+server.port=8080
+
+# OAuth2 Configuration - Supabase
+spring.security.oauth2.client.registration.supabase.client-id=${SUPABASE_OAUTH_CLIENT_ID:your-oauth-client-id}
+spring.security.oauth2.client.registration.supabase.client-secret=${SUPABASE_OAUTH_CLIENT_SECRET:your-oauth-client-secret}
+spring.security.oauth2.client.registration.supabase.authorization-grant-type=authorization_code
+spring.security.oauth2.client.registration.supabase.redirect-uri={baseUrl}/login/oauth2/code/{registrationId}
+spring.security.oauth2.client.registration.supabase.scope=openid,email,profile
+
+spring.security.oauth2.client.provider.supabase.authorization-uri=https://${SUPABASE_PROJECT_REF:your-project-ref}.supabase.co/auth/v1/authorize
+spring.security.oauth2.client.provider.supabase.token-uri=https://${SUPABASE_PROJECT_REF:your-project-ref}.supabase.co/auth/v1/token
+spring.security.oauth2.client.provider.supabase.user-info-uri=https://${SUPABASE_PROJECT_REF:your-project-ref}.supabase.co/auth/v1/user
+spring.security.oauth2.client.provider.supabase.jwk-set-uri=https://${SUPABASE_PROJECT_REF:your-project-ref}.supabase.co/auth/v1/.well-known/jwks.json
+spring.security.oauth2.client.provider.supabase.user-name-attribute=sub

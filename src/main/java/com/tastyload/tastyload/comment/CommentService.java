@@ -14,7 +14,7 @@ public class CommentService {
     }
     
     public List<CommentEntity> getPlaceComments(String placeId) {
-        return commentRepository.findByPlaceId(placeId);
+        return commentRepository.findByPlacePlaceId(placeId);
     }
     
 }

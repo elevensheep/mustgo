@@ -16,16 +16,16 @@ public class UserEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID uuid;
+    private UUID id;
     
     @Column(unique = true, nullable = false)
     private String email;
     
     @Column(nullable = false)
-    private String password;
-    
-    @Column(nullable = false)
     private String nickname;
+    
+    @Column(name = "profile_image_url")
+    private String profileImageUrl; // 프로필 이미지 URL
     
     @Column(name = "created_at")
     private LocalDateTime createdAt;

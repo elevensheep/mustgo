@@ -16,14 +16,14 @@ public class CommentEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int commentId;
+    private Long commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_uuid", referencedColumnName = "uuid")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "place_id", referencedColumnName = "place_id")
+    @JoinColumn(name = "place_id", referencedColumnName = "id")
     private PlaceEntity place;
 
     @Column(name = "content")

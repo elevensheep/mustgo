@@ -31,6 +31,13 @@ public class UserService {
     }
     
     /**
+     * 이메일로 사용자 조회
+     */
+    public Optional<UserEntity> getUserByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    
+    /**
      * 사용자 생성
      */
     @Transactional
@@ -109,5 +116,55 @@ public class UserService {
      */
     public long getUserCount() {
         return userRepository.count();
+    }
+    
+    /**
+     * OAuth 사용자 생성 (카카오, 구글 등)
+     */
+    @Transactional
+    public UserEntity createOAuthUser(String email, String nickname, String profileImageUrl) {
+        // 이메일 중복 체크
+        if (userRepository.existsByEmail(email)) {
+            throw new IllegalArgumentException("이미 존재하는 이메일입니다: " + email);
+        }
+        
+        // 닉네임 중복 체크
+        if (userRepository.existsByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다: " + nickname);
+        }
+        
+        UserEntity oauthUser = new UserEntity();
+        oauthUser.setEmail(email);
+        oauthUser.setNickname(nickname);
+        oauthUser.setProfileImageUrl(profileImageUrl);
+        
+        return userRepository.save(oauthUser);
+    }
+    
+    /**
+     * OAuth 사용자 존재 여부 확인 (email로 확인)
+     */
+    public boolean isOAuthUserExists(String email) {
+        return userRepository.existsByEmail(email);
+    }
+    
+    /**
+     * OAuth 사용자 정보 업데이트
+     */
+    @Transactional
+    public UserEntity updateOAuthUser(String email, String nickname, String profileImageUrl) {
+        UserEntity existingUser = userRepository.findByEmail(email)
+            .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + email));
+        
+        // 닉네임이 변경된 경우에만 중복 체크
+        if (!existingUser.getNickname().equals(nickname) && 
+            userRepository.existsByNickname(nickname)) {
+            throw new IllegalArgumentException("이미 존재하는 닉네임입니다: " + nickname);
+        }
+        
+        existingUser.setNickname(nickname);
+        existingUser.setProfileImageUrl(profileImageUrl);
+        
+        return userRepository.save(existingUser);
     }
 }

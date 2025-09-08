@@ -11,7 +11,7 @@ import java.util.UUID;
 public class UserResponse {
     
     @Schema(description = "사용자 UUID", example = "550e8400-e29b-41d4-a716-446655440000")
-    private UUID uuid;
+    private UUID id;
     
     @Schema(description = "사용자 이메일", example = "user@example.com")
     private String email;
@@ -30,7 +30,7 @@ public class UserResponse {
      */
     public static UserResponse from(UserEntity user) {
         UserResponse response = new UserResponse();
-        response.setUuid(user.getUuid());
+        response.setId(user.getId());
         response.setEmail(user.getEmail());
         response.setNickname(user.getNickname());
         response.setCreatedAt(user.getCreatedAt());

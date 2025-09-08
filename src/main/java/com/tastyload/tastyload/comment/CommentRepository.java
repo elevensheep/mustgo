@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CommentRepository extends JpaRepository<CommentEntity, Integer> {
+public interface CommentRepository extends JpaRepository<CommentEntity, Long> {
     
-    List<CommentEntity> findByPlaceId(String placeId);
+    List<CommentEntity> findByPlacePlaceId(String placeId);
 }

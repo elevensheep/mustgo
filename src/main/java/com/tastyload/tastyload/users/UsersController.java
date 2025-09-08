@@ -81,7 +81,6 @@ public class UsersController {
             // UserRequest를 UserEntity로 변환
             UserEntity user = new UserEntity();
             user.setEmail(userRequest.getEmail());
-            user.setPassword(userRequest.getPassword());
             user.setNickname(userRequest.getNickname());
             
             UserEntity createdUser = userService.createUser(user);
@@ -112,7 +111,6 @@ public class UsersController {
             // UserRequest를 UserEntity로 변환
             UserEntity user = new UserEntity();
             user.setEmail(userRequest.getEmail());
-            user.setPassword(userRequest.getPassword());
             user.setNickname(userRequest.getNickname());
             
             UserEntity updatedUser = userService.updateUser(id, user);

@@ -15,7 +15,7 @@ public class PlaceEntity {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
     
     @Column(nullable = false, name = "place_id", unique = true)
     private String placeId;
@@ -30,7 +30,7 @@ public class PlaceEntity {
     private String imageUrl;
     
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", referencedColumnName = "uuid")
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private UserEntity user;
     
     // @Column(name = "tags")

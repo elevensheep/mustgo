@@ -15,6 +15,7 @@ const places_module_1 = require("./places/places.module");
 const comments_module_1 = require("./comments/comments.module");
 const place_groups_module_1 = require("./place-groups/place-groups.module");
 const auth_module_1 = require("./auth/auth.module");
+const cache_module_1 = require("./common/cache/cache.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
@@ -29,7 +30,7 @@ exports.AppModule = AppModule = __decorate([
                 type: 'postgres',
                 url: process.env.DATABASE_URL,
                 entities: [__dirname + '/**/*.entity{.ts,.js}'],
-                synchronize: process.env.NODE_ENV !== 'production',
+                synchronize: false,
                 logging: process.env.NODE_ENV === 'development',
                 ssl: {
                     rejectUnauthorized: false,
@@ -45,6 +46,7 @@ exports.AppModule = AppModule = __decorate([
                     idleTimeoutMillis: 0,
                 },
             }),
+            cache_module_1.CacheConfigModule,
             users_module_1.UsersModule,
             places_module_1.PlacesModule,
             comments_module_1.CommentsModule,

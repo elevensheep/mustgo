@@ -32,11 +32,18 @@ export class PlacesController {
     const placeResponse: PlaceResponseDto = {
       id: place.id,
       placeId: place.placeId,
-      placeName: place.placeName,
+      name: place.name,
+      address: place.address,
+      roadAddress: place.roadAddress,
+      category: place.category,
+      phone: place.phone,
+      url: place.url,
       description: place.description,
       imageUrl: place.imageUrl,
       latitude: place.latitude,
       longitude: place.longitude,
+      distance: place.distance,
+      isFromAPI: place.isFromAPI,
       createdAt: place.createdAt,
       updatedAt: place.updatedAt,
     };
@@ -52,23 +59,30 @@ export class PlacesController {
     const placeResponses: PlaceResponseDto[] = places.map(place => ({
       id: place.id,
       placeId: place.placeId,
-      placeName: place.placeName,
+      name: place.name,
+      address: place.address,
+      roadAddress: place.roadAddress,
+      category: place.category,
+      phone: place.phone,
+      url: place.url,
       description: place.description,
       imageUrl: place.imageUrl,
       latitude: place.latitude,
       longitude: place.longitude,
+      distance: place.distance,
+      isFromAPI: place.isFromAPI,
       createdAt: place.createdAt,
       updatedAt: place.updatedAt,
     }));
     return ApiResponseDto.successWithMessage('모든 맛집을 조회했습니다', placeResponses);
   }
 
-  @Get(':placeName')
+  @Get(':name')
   @ApiOperation({ summary: '맛집 이름으로 검색', description: '맛집 이름으로 맛집을 검색합니다' })
-  @ApiParam({ name: 'placeName', description: '검색할 맛집 이름', example: '맛있는 식당' })
+  @ApiParam({ name: 'name', description: '검색할 맛집 이름', example: '맛있는 식당' })
   @ApiResponse({ status: 200, description: '맛집 검색 완료' })
-  async findByName(@Param('placeName') placeName: string): Promise<ApiResponseDto<PlaceResponseDto[]>> {
-    const places = await this.placesService.findByName(placeName);
+  async findByName(@Param('name') name: string): Promise<ApiResponseDto<PlaceResponseDto[]>> {
+    const places = await this.placesService.findByName(name);
     
     if (places.length === 0) {
       return ApiResponseDto.error('검색 결과가 없습니다', 'PLACE_NOT_FOUND');
@@ -77,11 +91,18 @@ export class PlacesController {
     const placeResponses: PlaceResponseDto[] = places.map(place => ({
       id: place.id,
       placeId: place.placeId,
-      placeName: place.placeName,
+      name: place.name,
+      address: place.address,
+      roadAddress: place.roadAddress,
+      category: place.category,
+      phone: place.phone,
+      url: place.url,
       description: place.description,
       imageUrl: place.imageUrl,
       latitude: place.latitude,
       longitude: place.longitude,
+      distance: place.distance,
+      isFromAPI: place.isFromAPI,
       createdAt: place.createdAt,
       updatedAt: place.updatedAt,
     }));

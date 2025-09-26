@@ -10,6 +10,22 @@ exports.LocalAuthGuard = void 0;
 const common_1 = require("@nestjs/common");
 const passport_1 = require("@nestjs/passport");
 let LocalAuthGuard = class LocalAuthGuard extends (0, passport_1.AuthGuard)('local') {
+    canActivate(context) {
+        console.log(`🔐 [LocalAuthGuard] 가드 실행 시작`);
+        return super.canActivate(context);
+    }
+    handleRequest(err, user, info) {
+        console.log(`🔐 [LocalAuthGuard] handleRequest 호출`);
+        console.log(`🔐 [LocalAuthGuard] err:`, err);
+        console.log(`🔐 [LocalAuthGuard] user:`, user);
+        console.log(`🔐 [LocalAuthGuard] info:`, info);
+        if (err || !user) {
+            console.log(`❌ [LocalAuthGuard] 인증 실패`);
+            throw err || new Error('인증 실패');
+        }
+        console.log(`✅ [LocalAuthGuard] 인증 성공`);
+        return user;
+    }
 };
 exports.LocalAuthGuard = LocalAuthGuard;
 exports.LocalAuthGuard = LocalAuthGuard = __decorate([

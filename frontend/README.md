@@ -7,6 +7,7 @@
 - **AI 맛집 추천**: RAG 기반 챗봇으로 자연어 질의에 맞는 맛집 추천
 - **플레이리스트 관리**: 상황·감정·테마별 맛집 플레이리스트 생성 및 공유
 - **맛집 탐색**: 다양한 맛집 검색 및 상세 정보 조회
+- **카카오 지도 연동**: 실시간 음식점 검색 및 위치 기반 플레이리스트 생성
 - **인증 시스템**: 이메일/비밀번호 및 OAuth 로그인 지원
 - **반응형 디자인**: 모바일과 데스크톱 모두 지원
 
@@ -37,10 +38,21 @@ npm install
 # API Configuration
 VITE_API_BASE_URL=http://localhost:8000
 
+# 카카오 지도 API (필수)
+VITE_KAKAO_MAP_API_KEY=your_kakao_map_api_key_here
+
 # OAuth Configuration (선택사항)
 VITE_GOOGLE_CLIENT_ID=your_google_client_id
 VITE_GITHUB_CLIENT_ID=your_github_client_id
 ```
+
+#### 카카오 지도 API 키 발급 방법
+
+1. [카카오 개발자 콘솔](https://developers.kakao.com/)에 접속
+2. 애플리케이션 생성 또는 기존 애플리케이션 선택
+3. 플랫폼 설정에서 Web 플랫폼 추가
+4. 사이트 도메인 등록 (개발: `http://localhost:5173`, 프로덕션: 실제 도메인)
+5. JavaScript 키 복사하여 `VITE_KAKAO_MAP_API_KEY`에 설정
 
 ### 3. 개발 서버 실행
 
@@ -129,6 +141,8 @@ src/
 
 ### 플레이리스트 관리
 - 플레이리스트 생성 및 편집
+- 카카오 지도를 통한 위치 기반 플레이리스트 생성
+- 실시간 음식점 검색 및 추가
 - 맛집을 플레이리스트에 추가/제거
 - 플레이리스트 공유
 - 테마별 분류

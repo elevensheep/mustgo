@@ -20,48 +20,108 @@ const place_group_entity_1 = require("./entities/place-group.entity");
 const place_group_item_entity_1 = require("./entities/place-group-item.entity");
 const place_entity_1 = require("../places/entities/place.entity");
 const user_entity_1 = require("../users/entities/user.entity");
+const cache_manager_1 = require("@nestjs/cache-manager");
 let PlaceGroupsService = class PlaceGroupsService {
-    constructor(placeGroupsRepository, placeGroupItemsRepository, placesRepository, usersRepository) {
+    constructor(placeGroupsRepository, placeGroupItemsRepository, placesRepository, usersRepository, cacheManager) {
         this.placeGroupsRepository = placeGroupsRepository;
         this.placeGroupItemsRepository = placeGroupItemsRepository;
         this.placesRepository = placesRepository;
         this.usersRepository = usersRepository;
+        this.cacheManager = cacheManager;
     }
-    async create(name, description, userId) {
-        const user = await this.usersRepository.findOne({ where: { uuid: userId } });
+    async create(createPlaceGroupDto) {
+        const user = await this.usersRepository.findOne({ where: { uuid: createPlaceGroupDto.userId } });
         if (!user) {
-            throw new Error('User not found');
+            throw new common_1.NotFoundException('사용자를 찾을 수 없습니다');
+        }
+        const existingPlaylist = await this.placeGroupsRepository.findOne({
+            where: { name: createPlaceGroupDto.name, user: { uuid: createPlaceGroupDto.userId } }
+        });
+        if (existingPlaylist) {
+            throw new common_1.BadRequestException('같은 이름의 플레이리스트가 이미 존재합니다');
         }
         const placeGroup = this.placeGroupsRepository.create({
-            name,
-            description,
+            name: createPlaceGroupDto.name,
+            description: createPlaceGroupDto.description,
+            latitude: createPlaceGroupDto.location?.latitude,
+            longitude: createPlaceGroupDto.location?.longitude,
+            address: createPlaceGroupDto.location?.address,
             user,
         });
-        return this.placeGroupsRepository.save(placeGroup);
+        const savedPlaceGroup = await this.placeGroupsRepository.save(placeGroup);
+        if (createPlaceGroupDto.places && createPlaceGroupDto.places.length > 0) {
+            for (const placeInfo of createPlaceGroupDto.places) {
+                await this.addPlaceToGroup(savedPlaceGroup.id, placeInfo);
+            }
+        }
+        await this.cacheManager.del('playlists:all');
+        await this.cacheManager.del(`playlist:${savedPlaceGroup.id}`);
+        return this.findOne(savedPlaceGroup.id);
     }
-    async findAll() {
-        return this.placeGroupsRepository.find({
-            relations: ['user', 'items'],
-        });
-    }
-    async findOne(id) {
-        return this.placeGroupsRepository.findOne({
-            where: { id },
-            relations: ['user', 'items'],
-        });
-    }
-    async addPlaceToGroup(groupId, placeId, note) {
+    async addPlaceToGroup(groupId, placeInfo) {
         const placeGroup = await this.placeGroupsRepository.findOne({ where: { id: groupId } });
-        const place = await this.placesRepository.findOne({ where: { id: placeId } });
-        if (!placeGroup || !place) {
-            throw new Error('PlaceGroup or Place not found');
+        if (!placeGroup) {
+            throw new common_1.NotFoundException('플레이리스트를 찾을 수 없습니다');
+        }
+        let place;
+        if (placeInfo.id) {
+            place = await this.placesRepository.findOne({ where: { id: placeInfo.id } });
+        }
+        else if (placeInfo.placeId) {
+            place = await this.placesRepository.findOne({ where: { placeId: placeInfo.placeId } });
+        }
+        if (!place) {
+            place = this.placesRepository.create({
+                placeId: placeInfo.placeId,
+                name: placeInfo.name,
+                address: placeInfo.address,
+                roadAddress: placeInfo.roadAddress,
+                category: placeInfo.category,
+                phone: placeInfo.phone,
+                url: placeInfo.url,
+                description: placeInfo.description,
+                imageUrl: placeInfo.imageUrl,
+                latitude: placeInfo.latitude,
+                longitude: placeInfo.longitude,
+                distance: placeInfo.distance,
+                isFromAPI: placeInfo.isFromAPI || false,
+                user: placeGroup.user,
+            });
+            place = await this.placesRepository.save(place);
         }
         const placeGroupItem = this.placeGroupItemsRepository.create({
             placeGroup,
             place,
-            note,
         });
         return this.placeGroupItemsRepository.save(placeGroupItem);
+    }
+    async findAll() {
+        const cacheKey = 'playlists:all';
+        const cached = await this.cacheManager.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+        const playlists = await this.placeGroupsRepository.find({
+            relations: ['user', 'items', 'items.place'],
+        });
+        await this.cacheManager.set(cacheKey, playlists, 300);
+        return playlists;
+    }
+    async findOne(id) {
+        const cacheKey = `playlist:${id}`;
+        const cached = await this.cacheManager.get(cacheKey);
+        if (cached) {
+            return cached;
+        }
+        const placeGroup = await this.placeGroupsRepository.findOne({
+            where: { id },
+            relations: ['user', 'items', 'items.place'],
+        });
+        if (!placeGroup) {
+            throw new common_1.NotFoundException('플레이리스트를 찾을 수 없습니다');
+        }
+        await this.cacheManager.set(cacheKey, placeGroup, 600);
+        return placeGroup;
     }
 };
 exports.PlaceGroupsService = PlaceGroupsService;
@@ -71,9 +131,10 @@ exports.PlaceGroupsService = PlaceGroupsService = __decorate([
     __param(1, (0, typeorm_1.InjectRepository)(place_group_item_entity_1.PlaceGroupItem)),
     __param(2, (0, typeorm_1.InjectRepository)(place_entity_1.Place)),
     __param(3, (0, typeorm_1.InjectRepository)(user_entity_1.User)),
+    __param(4, (0, common_1.Inject)(cache_manager_1.CACHE_MANAGER)),
     __metadata("design:paramtypes", [typeorm_2.Repository,
         typeorm_2.Repository,
         typeorm_2.Repository,
-        typeorm_2.Repository])
+        typeorm_2.Repository, Object])
 ], PlaceGroupsService);
 //# sourceMappingURL=place-groups.service.js.map

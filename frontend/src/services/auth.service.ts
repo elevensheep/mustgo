@@ -5,13 +5,28 @@ import type { LoginDto, AuthResponse, User, CreateUserDto, OAuthProvider } from 
 export class AuthService {
   // 이메일/비밀번호 로그인
   async login(credentials: LoginDto): Promise<AuthResponse> {
-    const response = await apiService.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, credentials);
-    return response.data;
+    console.log('🔐 [AuthService] 로그인 요청:', credentials);
+    console.log('🔐 [AuthService] API 엔드포인트:', API_ENDPOINTS.AUTH.LOGIN);
+    
+    try {
+      const response = await apiService.post<AuthResponse>(API_ENDPOINTS.AUTH.LOGIN, credentials);
+      console.log('✅ [AuthService] 로그인 성공:', response);
+      return response.data;
+    } catch (error) {
+      console.error('❌ [AuthService] 로그인 실패:', error);
+      throw error;
+    }
   }
 
   // 사용자 프로필 조회
   async getProfile(): Promise<User> {
     const response = await apiService.post<User>(API_ENDPOINTS.AUTH.PROFILE);
+    return response.data;
+  }
+
+  // 사용자 프로필 업데이트
+  async updateProfile(userId: string, userData: Partial<User>): Promise<User> {
+    const response = await apiService.put<User>(API_ENDPOINTS.USERS.UPDATE(userId), userData);
     return response.data;
   }
 
@@ -63,6 +78,12 @@ export class AuthService {
   logout(): void {
     localStorage.removeItem('access_token');
     localStorage.removeItem('user');
+  }
+
+  // 사용자 정보 조회 (userId로)
+  async getUserById(userId: string): Promise<User> {
+    const response = await api.get(`/users/${userId}`);
+    return response.data;
   }
 
   // 로그인 상태 확인

@@ -75,6 +75,17 @@ let UsersController = class UsersController {
         const exists = await this.usersService.isEmailExists(email);
         return api_response_dto_1.ApiResponse.successWithMessage(exists ? '이메일이 이미 사용 중입니다' : '사용 가능한 이메일입니다', exists);
     }
+    async resetPassword(body) {
+        const user = await this.usersService.resetPassword(body.email, body.password);
+        const userResponse = {
+            uuid: user.uuid,
+            email: user.email,
+            nickname: user.nickname,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
+        };
+        return api_response_dto_1.ApiResponse.successWithMessage('비밀번호가 성공적으로 재설정되었습니다', userResponse);
+    }
 };
 exports.UsersController = UsersController;
 __decorate([
@@ -140,6 +151,16 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "checkEmail", null);
+__decorate([
+    (0, common_1.Post)('reset-password'),
+    (0, swagger_1.ApiOperation)({ summary: '비밀번호 재설정', description: '기존 사용자의 비밀번호를 재설정합니다 (디버깅용)' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: '비밀번호 재설정 성공' }),
+    (0, swagger_1.ApiResponse)({ status: 404, description: '사용자를 찾을 수 없음' }),
+    __param(0, (0, common_1.Body)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], UsersController.prototype, "resetPassword", null);
 exports.UsersController = UsersController = __decorate([
     (0, swagger_1.ApiTags)('사용자 관리'),
     (0, common_1.Controller)('api/users'),

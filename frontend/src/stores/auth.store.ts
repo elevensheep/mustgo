@@ -44,9 +44,31 @@ export const useAuthStore = create<AuthStore>()(
             error: null,
           });
         } catch (error: unknown) {
-          const errorMessage = error instanceof Error 
-            ? error.message 
-            : '로그인에 실패했습니다.';
+          console.error('🔍 [AuthStore] 로그인 에러 상세:', error);
+          
+          let errorMessage = '로그인에 실패했습니다.';
+          
+          if (error && typeof error === 'object' && 'response' in error) {
+            const axiosError = error as { 
+              response?: { 
+                status?: number; 
+                data?: { message?: string; error?: string } 
+              } 
+            };
+            
+            if (axiosError.response?.status === 401) {
+              errorMessage = '이메일 또는 비밀번호가 올바르지 않습니다.';
+            } else if (axiosError.response?.data?.message) {
+              errorMessage = axiosError.response.data.message;
+            } else if (axiosError.response?.data?.error) {
+              errorMessage = axiosError.response.data.error;
+            }
+          } else if (error instanceof Error) {
+            errorMessage = error.message;
+          }
+          
+          console.error('🔍 [AuthStore] 최종 에러 메시지:', errorMessage);
+          
           set({
             user: null,
             isAuthenticated: false,

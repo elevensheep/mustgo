@@ -16,15 +16,27 @@ const common_1 = require("@nestjs/common");
 const auth_service_1 = require("../auth.service");
 let LocalStrategy = class LocalStrategy extends (0, passport_1.PassportStrategy)(passport_local_1.Strategy) {
     constructor(authService) {
-        super();
+        super({
+            usernameField: 'email',
+            passwordField: 'password'
+        });
         this.authService = authService;
     }
     async validate(email, password) {
-        const user = await this.authService.validateUser(email, password);
-        if (!user) {
-            throw new common_1.UnauthorizedException();
+        console.log(`🔐 [LocalStrategy] 이메일 로그인 시도: ${email}`);
+        try {
+            const user = await this.authService.validateUser(email, password);
+            if (!user) {
+                console.log(`❌ [LocalStrategy] 사용자 검증 실패: ${email}`);
+                throw new common_1.UnauthorizedException('이메일 또는 비밀번호가 올바르지 않습니다');
+            }
+            console.log(`✅ [LocalStrategy] 사용자 검증 성공: ${email}`);
+            return user;
         }
-        return user;
+        catch (error) {
+            console.error(`❌ [LocalStrategy] 로그인 오류:`, error.message);
+            throw new common_1.UnauthorizedException('로그인에 실패했습니다');
+        }
     }
 };
 exports.LocalStrategy = LocalStrategy;

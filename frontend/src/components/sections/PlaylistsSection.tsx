@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Users, ArrowRight } from 'lucide-react';
 import { usePlaylistsStore } from '../../stores/playlists.store';
+import { useAuthStore } from '../../stores/auth.store';
+import { useUserInfo } from '../../hooks/useUserInfo';
 import Card from '../ui/Card';
 import Button from '../ui/Button';
 import LoadingSpinner from '../common/LoadingSpinner';
@@ -9,6 +11,7 @@ import EmptyState from '../common/EmptyState';
 
 const PlaylistsSection: React.FC = () => {
   const { popularPlaylists, isLoading, fetchPopularPlaylists } = usePlaylistsStore();
+  const { user } = useAuthStore();
 
   React.useEffect(() => {
     if (popularPlaylists.length === 0) {
@@ -69,7 +72,7 @@ const PlaylistsSection: React.FC = () => {
                     </p>
                   )}
                   <div className="flex items-center justify-between text-sm text-gray-500">
-                    <span>플레이리스트</span>
+                    <span>{user?.uuid === playlist.userId ? '내 플레이리스트' : '다른 사용자'}</span>
                     <span>{new Date(playlist.createdAt).toLocaleDateString()}</span>
                   </div>
                 </Link>

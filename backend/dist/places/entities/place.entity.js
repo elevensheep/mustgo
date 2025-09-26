@@ -21,13 +21,33 @@ __decorate([
     __metadata("design:type", Number)
 ], Place.prototype, "id", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'place_id', unique: true, nullable: false }),
+    (0, typeorm_1.Column)({ name: 'place_id', unique: true, nullable: true }),
     __metadata("design:type", String)
 ], Place.prototype, "placeId", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ name: 'place_name', nullable: false }),
+    (0, typeorm_1.Column)({ name: 'name', nullable: false }),
     __metadata("design:type", String)
-], Place.prototype, "placeName", void 0);
+], Place.prototype, "name", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Place.prototype, "address", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'road_address', nullable: true }),
+    __metadata("design:type", String)
+], Place.prototype, "roadAddress", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Place.prototype, "category", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Place.prototype, "phone", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], Place.prototype, "url", void 0);
 __decorate([
     (0, typeorm_1.Column)({ nullable: true }),
     __metadata("design:type", String)
@@ -42,13 +62,21 @@ __decorate([
     __metadata("design:type", user_entity_1.User)
 ], Place.prototype, "user", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ type: 'double precision', nullable: false }),
     __metadata("design:type", Number)
 ], Place.prototype, "latitude", void 0);
 __decorate([
-    (0, typeorm_1.Column)({ nullable: true }),
+    (0, typeorm_1.Column)({ type: 'double precision', nullable: false }),
     __metadata("design:type", Number)
 ], Place.prototype, "longitude", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", Number)
+], Place.prototype, "distance", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ name: 'is_from_api', default: false }),
+    __metadata("design:type", Boolean)
+], Place.prototype, "isFromAPI", void 0);
 __decorate([
     (0, typeorm_1.CreateDateColumn)({ name: 'created_at' }),
     __metadata("design:type", Date)

@@ -22,6 +22,15 @@ export class PlaceGroup {
   @Column({ nullable: true })
   description: string;
 
+  @Column({ type: 'double precision', nullable: true })
+  latitude: number;
+
+  @Column({ type: 'double precision', nullable: true })
+  longitude: number;
+
+  @Column({ nullable: true })
+  address: string;
+
   @ManyToOne(() => User, { lazy: true })
   @JoinColumn({ name: 'user_id', referencedColumnName: 'uuid' })
   user: User;

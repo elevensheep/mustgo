@@ -5,10 +5,11 @@ export class CreatePlaceDto {
   @ApiProperty({
     description: '맛집 고유 ID',
     example: 'place_12345',
+    required: false,
   })
   @IsString()
-  @IsNotEmpty({ message: '맛집 ID는 필수입니다' })
-  placeId: string;
+  @IsOptional()
+  placeId?: string;
 
   @ApiProperty({
     description: '맛집 이름',
@@ -16,7 +17,52 @@ export class CreatePlaceDto {
   })
   @IsString()
   @IsNotEmpty({ message: '맛집 이름은 필수입니다' })
-  placeName: string;
+  name: string;
+
+  @ApiProperty({
+    description: '주소',
+    example: '서울시 강남구 테헤란로 123',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  address?: string;
+
+  @ApiProperty({
+    description: '도로명 주소',
+    example: '서울시 강남구 테헤란로 123',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  roadAddress?: string;
+
+  @ApiProperty({
+    description: '카테고리',
+    example: '한식',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  category?: string;
+
+  @ApiProperty({
+    description: '전화번호',
+    example: '02-1234-5678',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  phone?: string;
+
+  @ApiProperty({
+    description: '웹사이트 URL',
+    example: 'https://example.com',
+    required: false,
+  })
+  @IsString()
+  @IsOptional()
+  url?: string;
 
   @ApiProperty({
     description: '맛집 설명',
@@ -47,18 +93,33 @@ export class CreatePlaceDto {
   @ApiProperty({
     description: '위도',
     example: 37.5665,
-    required: false,
   })
   @IsNumber()
-  @IsOptional()
-  latitude?: number;
+  @IsNotEmpty({ message: '위도는 필수입니다' })
+  latitude: number;
 
   @ApiProperty({
     description: '경도',
     example: 126.9780,
+  })
+  @IsNumber()
+  @IsNotEmpty({ message: '경도는 필수입니다' })
+  longitude: number;
+
+  @ApiProperty({
+    description: '거리',
+    example: 100,
     required: false,
   })
   @IsNumber()
   @IsOptional()
-  longitude?: number;
+  distance?: number;
+
+  @ApiProperty({
+    description: 'API에서 가져온 데이터인지 여부',
+    example: false,
+    required: false,
+  })
+  @IsOptional()
+  isFromAPI?: boolean;
 }

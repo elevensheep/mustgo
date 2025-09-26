@@ -7,5 +7,5 @@ export declare class PlacesController {
     constructor(placesService: PlacesService);
     create(createPlaceDto: CreatePlaceDto): Promise<ApiResponseDto<PlaceResponseDto | null>>;
     findAll(): Promise<ApiResponseDto<PlaceResponseDto[]>>;
-    findByName(placeName: string): Promise<ApiResponseDto<PlaceResponseDto[]>>;
+    findByName(name: string): Promise<ApiResponseDto<PlaceResponseDto[]>>;
 }

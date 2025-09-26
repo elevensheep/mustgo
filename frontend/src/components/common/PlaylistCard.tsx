@@ -2,6 +2,8 @@ import React, { memo } from 'react';
 import { Link } from 'react-router-dom';
 import { Users, Star } from 'lucide-react';
 import Card from '../ui/Card';
+import { useAuthStore } from '../../stores/auth.store';
+import { useUserInfo } from '../../hooks/useUserInfo';
 import type { PlaceGroup } from '../../types';
 
 interface PlaylistCardProps {
@@ -10,6 +12,10 @@ interface PlaylistCardProps {
 }
 
 const PlaylistCard: React.FC<PlaylistCardProps> = memo(({ playlist, viewMode = 'grid' }) => {
+  const { user } = useAuthStore();
+  const { userInfo, isLoading } = useUserInfo(playlist.userId);
+  const isMyPlaylist = user?.uuid === playlist.userId;
+  
   if (viewMode === 'list') {
     return (
       <Card hover className="overflow-hidden">
@@ -29,7 +35,14 @@ const PlaylistCard: React.FC<PlaylistCardProps> = memo(({ playlist, viewMode = '
             <div className="flex items-center justify-between text-sm text-gray-500">
               <div className="flex items-center">
                 <Users className="w-4 h-4 mr-1" />
-                <span>플레이리스트</span>
+                <span>
+                  {isMyPlaylist 
+                    ? '내 플레이리스트' 
+                    : isLoading 
+                      ? '로딩 중...' 
+                      : userInfo?.nickname || '알 수 없는 사용자'
+                  }
+                </span>
               </div>
               <div className="flex items-center">
                 <Star className="w-4 h-4 mr-1 text-yellow-500" />
@@ -62,7 +75,14 @@ const PlaylistCard: React.FC<PlaylistCardProps> = memo(({ playlist, viewMode = '
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center">
             <Users className="w-4 h-4 mr-1" />
-            <span>플레이리스트</span>
+            <span>
+              {isMyPlaylist 
+                ? '내 플레이리스트' 
+                : isLoading 
+                  ? '로딩 중...' 
+                  : userInfo?.nickname || '알 수 없는 사용자'
+              }
+            </span>
           </div>
           <div className="flex items-center">
             <Star className="w-4 h-4 mr-1 text-yellow-500" />
@@ -80,3 +100,6 @@ const PlaylistCard: React.FC<PlaylistCardProps> = memo(({ playlist, viewMode = '
 PlaylistCard.displayName = 'PlaylistCard';
 
 export default PlaylistCard;
+
+
+

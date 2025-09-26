@@ -30,19 +30,28 @@ let PlacesService = class PlacesService {
         if (!user) {
             throw new common_1.NotFoundException('사용자를 찾을 수 없습니다');
         }
-        const existingPlace = await this.placesRepository.findOne({
-            where: { placeId: createPlaceDto.placeId },
-        });
-        if (existingPlace) {
-            await this.placesRepository.remove(existingPlace);
+        if (createPlaceDto.placeId) {
+            const existingPlace = await this.placesRepository.findOne({
+                where: { placeId: createPlaceDto.placeId },
+            });
+            if (existingPlace) {
+                await this.placesRepository.remove(existingPlace);
+            }
         }
         const place = this.placesRepository.create({
             placeId: createPlaceDto.placeId,
-            placeName: createPlaceDto.placeName,
+            name: createPlaceDto.name,
+            address: createPlaceDto.address,
+            roadAddress: createPlaceDto.roadAddress,
+            category: createPlaceDto.category,
+            phone: createPlaceDto.phone,
+            url: createPlaceDto.url,
             description: createPlaceDto.description,
             imageUrl: createPlaceDto.imageUrl,
             latitude: createPlaceDto.latitude,
             longitude: createPlaceDto.longitude,
+            distance: createPlaceDto.distance,
+            isFromAPI: createPlaceDto.isFromAPI || false,
             user: user,
         });
         return this.placesRepository.save(place);
@@ -52,11 +61,11 @@ let PlacesService = class PlacesService {
             relations: ['user'],
         });
     }
-    async findByName(placeName) {
+    async findByName(name) {
         return this.placesRepository
             .createQueryBuilder('place')
             .leftJoinAndSelect('place.user', 'user')
-            .where('place.placeName ILIKE :placeName', { placeName: `%${placeName}%` })
+            .where('place.name ILIKE :name', { name: `%${name}%` })
             .getMany();
     }
     async findOne(id) {

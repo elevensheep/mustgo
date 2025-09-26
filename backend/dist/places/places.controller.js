@@ -30,11 +30,18 @@ let PlacesController = class PlacesController {
         const placeResponse = {
             id: place.id,
             placeId: place.placeId,
-            placeName: place.placeName,
+            name: place.name,
+            address: place.address,
+            roadAddress: place.roadAddress,
+            category: place.category,
+            phone: place.phone,
+            url: place.url,
             description: place.description,
             imageUrl: place.imageUrl,
             latitude: place.latitude,
             longitude: place.longitude,
+            distance: place.distance,
+            isFromAPI: place.isFromAPI,
             createdAt: place.createdAt,
             updatedAt: place.updatedAt,
         };
@@ -45,29 +52,43 @@ let PlacesController = class PlacesController {
         const placeResponses = places.map(place => ({
             id: place.id,
             placeId: place.placeId,
-            placeName: place.placeName,
+            name: place.name,
+            address: place.address,
+            roadAddress: place.roadAddress,
+            category: place.category,
+            phone: place.phone,
+            url: place.url,
             description: place.description,
             imageUrl: place.imageUrl,
             latitude: place.latitude,
             longitude: place.longitude,
+            distance: place.distance,
+            isFromAPI: place.isFromAPI,
             createdAt: place.createdAt,
             updatedAt: place.updatedAt,
         }));
         return api_response_dto_1.ApiResponse.successWithMessage('모든 맛집을 조회했습니다', placeResponses);
     }
-    async findByName(placeName) {
-        const places = await this.placesService.findByName(placeName);
+    async findByName(name) {
+        const places = await this.placesService.findByName(name);
         if (places.length === 0) {
             return api_response_dto_1.ApiResponse.error('검색 결과가 없습니다', 'PLACE_NOT_FOUND');
         }
         const placeResponses = places.map(place => ({
             id: place.id,
             placeId: place.placeId,
-            placeName: place.placeName,
+            name: place.name,
+            address: place.address,
+            roadAddress: place.roadAddress,
+            category: place.category,
+            phone: place.phone,
+            url: place.url,
             description: place.description,
             imageUrl: place.imageUrl,
             latitude: place.latitude,
             longitude: place.longitude,
+            distance: place.distance,
+            isFromAPI: place.isFromAPI,
             createdAt: place.createdAt,
             updatedAt: place.updatedAt,
         }));
@@ -95,11 +116,11 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], PlacesController.prototype, "findAll", null);
 __decorate([
-    (0, common_1.Get)(':placeName'),
+    (0, common_1.Get)(':name'),
     (0, swagger_1.ApiOperation)({ summary: '맛집 이름으로 검색', description: '맛집 이름으로 맛집을 검색합니다' }),
-    (0, swagger_1.ApiParam)({ name: 'placeName', description: '검색할 맛집 이름', example: '맛있는 식당' }),
+    (0, swagger_1.ApiParam)({ name: 'name', description: '검색할 맛집 이름', example: '맛있는 식당' }),
     (0, swagger_1.ApiResponse)({ status: 200, description: '맛집 검색 완료' }),
-    __param(0, (0, common_1.Param)('placeName')),
+    __param(0, (0, common_1.Param)('name')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)

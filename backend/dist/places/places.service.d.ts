@@ -8,6 +8,6 @@ export declare class PlacesService {
     constructor(placesRepository: Repository<Place>, usersRepository: Repository<User>);
     create(createPlaceDto: CreatePlaceDto): Promise<Place>;
     findAll(): Promise<Place[]>;
-    findByName(placeName: string): Promise<Place[]>;
+    findByName(name: string): Promise<Place[]>;
     findOne(id: number): Promise<Place>;
 }

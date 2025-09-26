@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
-import { Eye, EyeOff, Github, Chrome } from 'lucide-react';
+import { Eye, EyeOff, Github, Chrome, MessageCircle } from 'lucide-react';
 import { useAuthStore } from '../../stores/auth.store';
 import { authService } from '../../services/auth.service';
 import Button from '../../components/ui/Button';
@@ -34,12 +34,12 @@ const LoginPage: React.FC = () => {
     }
   };
 
-  const handleOAuthLogin = (provider: 'google' | 'github') => {
+  const handleOAuthLogin = (provider: 'google' | 'kakao') => {
     authService.initiateOAuthLogin(provider);
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-lavender-500 via-pastel-purple to-pastel-sky flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <div className="flex justify-center">
           <div className="w-12 h-12 bg-primary-600 rounded-lg flex items-center justify-center">
@@ -162,11 +162,11 @@ const LoginPage: React.FC = () => {
 
               <Button
                 variant="outline"
-                onClick={() => handleOAuthLogin('github')}
+                onClick={() => handleOAuthLogin('kakao')}
                 className="w-full"
               >
-                <Github className="w-5 h-5 mr-2" />
-                GitHub
+                <MessageCircle className="w-5 h-5 mr-2" />
+                Kakao
               </Button>
             </div>
           </div>

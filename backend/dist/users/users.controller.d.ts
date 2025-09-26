@@ -12,4 +12,8 @@ export declare class UsersController {
     update(id: string, updateUserDto: UpdateUserDto): Promise<ApiResponseDto<UserResponseDto>>;
     remove(id: string): Promise<ApiResponseDto<null>>;
     checkEmail(email: string): Promise<ApiResponseDto<boolean>>;
+    resetPassword(body: {
+        email: string;
+        password: string;
+    }): Promise<ApiResponseDto<UserResponseDto>>;
 }

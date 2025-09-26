@@ -23,23 +23,35 @@ let SupabaseService = class SupabaseService {
     }
     async getUserInfo(accessToken) {
         try {
+            console.log('🔍 [SupabaseService] 사용자 정보 조회 시작');
             const { data: { user }, error } = await this.supabase.auth.getUser(accessToken);
             if (error) {
+                console.error('❌ [SupabaseService] 사용자 정보 조회 실패:', error.message);
                 throw new Error(error.message);
             }
+            if (!user) {
+                console.error('❌ [SupabaseService] 사용자 정보가 없습니다');
+                throw new Error('사용자 정보가 없습니다');
+            }
+            console.log('✅ [SupabaseService] 사용자 정보 조회 성공:', {
+                id: user.id,
+                email: user.email,
+                metadata: user.user_metadata
+            });
             return user;
         }
         catch (error) {
+            console.error('❌ [SupabaseService] 사용자 정보 조회 실패:', error.message);
             throw new Error(`Supabase 사용자 정보 조회 실패: ${error.message}`);
         }
     }
     async signInWithOAuth(provider) {
         console.log(`🌐 [SupabaseService] ${provider} OAuth URL 생성 시작`);
-        console.log(`🔗 [SupabaseService] 리다이렉트 URL: ${this.configService.get('FRONTEND_URL')}/auth/callback`);
+        console.log(`🔗 [SupabaseService] 리다이렉트 URL: ${this.configService.get('FRONTEND_URL')}/auth/success`);
         const { data, error } = await this.supabase.auth.signInWithOAuth({
             provider,
             options: {
-                redirectTo: `${this.configService.get('FRONTEND_URL')}/auth/callback`,
+                redirectTo: `${this.configService.get('FRONTEND_URL')}/auth/success`,
             },
         });
         if (error) {

@@ -24,23 +24,32 @@ export class PlacesService {
       throw new NotFoundException('사용자를 찾을 수 없습니다');
     }
 
-    // 중복된 placeId 체크
-    const existingPlace = await this.placesRepository.findOne({
-      where: { placeId: createPlaceDto.placeId },
-    });
+    // 중복된 placeId 체크 (placeId가 있는 경우에만)
+    if (createPlaceDto.placeId) {
+      const existingPlace = await this.placesRepository.findOne({
+        where: { placeId: createPlaceDto.placeId },
+      });
 
-    if (existingPlace) {
-      // 중복된 장소가 있으면 삭제하고 새로 생성
-      await this.placesRepository.remove(existingPlace);
+      if (existingPlace) {
+        // 중복된 장소가 있으면 삭제하고 새로 생성
+        await this.placesRepository.remove(existingPlace);
+      }
     }
 
     const place = this.placesRepository.create({
       placeId: createPlaceDto.placeId,
-      placeName: createPlaceDto.placeName,
+      name: createPlaceDto.name,
+      address: createPlaceDto.address,
+      roadAddress: createPlaceDto.roadAddress,
+      category: createPlaceDto.category,
+      phone: createPlaceDto.phone,
+      url: createPlaceDto.url,
       description: createPlaceDto.description,
       imageUrl: createPlaceDto.imageUrl,
       latitude: createPlaceDto.latitude,
       longitude: createPlaceDto.longitude,
+      distance: createPlaceDto.distance,
+      isFromAPI: createPlaceDto.isFromAPI || false,
       user: user,
     });
 
@@ -53,11 +62,11 @@ export class PlacesService {
     });
   }
 
-  async findByName(placeName: string): Promise<Place[]> {
+  async findByName(name: string): Promise<Place[]> {
     return this.placesRepository
       .createQueryBuilder('place')
       .leftJoinAndSelect('place.user', 'user')
-      .where('place.placeName ILIKE :placeName', { placeName: `%${placeName}%` })
+      .where('place.name ILIKE :name', { name: `%${name}%` })
       .getMany();
   }
 

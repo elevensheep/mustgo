@@ -6,6 +6,7 @@ import { PlacesModule } from './places/places.module';
 import { CommentsModule } from './comments/comments.module';
 import { PlaceGroupsModule } from './place-groups/place-groups.module';
 import { AuthModule } from './auth/auth.module';
+import { CacheConfigModule } from './common/cache/cache.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { AuthModule } from './auth/auth.module';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      synchronize: process.env.NODE_ENV !== 'production',
+      synchronize: false, // 임시로 비활성화
       logging: process.env.NODE_ENV === 'development',
       ssl: {
         rejectUnauthorized: false,
@@ -35,6 +36,7 @@ import { AuthModule } from './auth/auth.module';
         idleTimeoutMillis: 0,
       },
     }),
+    CacheConfigModule,
     UsersModule,
     PlacesModule,
     CommentsModule,

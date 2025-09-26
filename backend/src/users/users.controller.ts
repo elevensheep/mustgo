@@ -110,4 +110,20 @@ export class UsersController {
       exists,
     );
   }
+
+  @Post('reset-password')
+  @ApiOperation({ summary: '비밀번호 재설정', description: '기존 사용자의 비밀번호를 재설정합니다 (디버깅용)' })
+  @ApiResponse({ status: 200, description: '비밀번호 재설정 성공' })
+  @ApiResponse({ status: 404, description: '사용자를 찾을 수 없음' })
+  async resetPassword(@Body() body: { email: string; password: string }): Promise<ApiResponseDto<UserResponseDto>> {
+    const user = await this.usersService.resetPassword(body.email, body.password);
+    const userResponse: UserResponseDto = {
+      uuid: user.uuid,
+      email: user.email,
+      nickname: user.nickname,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+    return ApiResponseDto.successWithMessage('비밀번호가 성공적으로 재설정되었습니다', userResponse);
+  }
 }

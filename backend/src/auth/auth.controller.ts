@@ -1,4 +1,4 @@
-import { Controller, Post, Body, UseGuards, Request, Get, Query, Res, Param } from '@nestjs/common';
+import { Controller, Post, Body, UseGuards, Request, Get, Query, Res, Param, UnauthorizedException } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiQuery, ApiParam } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
 import { LocalAuthGuard } from './guards/local-auth.guard';
@@ -26,8 +26,18 @@ export class AuthController {
   })
   @ApiResponse({ status: 200, description: '로그인 성공' })
   @ApiResponse({ status: 401, description: '인증 실패' })
-  async login(@Request() req): Promise<ApiResponseDto<any>> {
+  async login(@Request() req, @Body() body: any): Promise<ApiResponseDto<any>> {
+    console.log(`🔐 [AuthController] 로그인 요청 수신`);
+    console.log(`📋 [AuthController] 요청 본문:`, body);
+    console.log(`👤 [AuthController] req.user:`, req.user);
+    
+    if (!req.user) {
+      console.log(`❌ [AuthController] req.user가 없습니다 - LocalStrategy 실패`);
+      throw new UnauthorizedException('이메일 또는 비밀번호가 올바르지 않습니다');
+    }
+    
     const result = await this.authService.login(req.user);
+    console.log(`✅ [AuthController] 로그인 성공:`, result);
     return ApiResponseDto.successWithMessage('로그인이 성공했습니다', result);
   }
 
@@ -96,6 +106,30 @@ export class AuthController {
       console.log(`🔄 [OAuth Callback] 에러 페이지로 리다이렉트 중: ${process.env.FRONTEND_URL}/auth/error`);
       
       return res.redirect(`${process.env.FRONTEND_URL}/auth/error?message=${encodeURIComponent(error.message)}`);
+    }
+  }
+
+  @Post('supabase/verify')
+  @ApiOperation({ summary: 'Supabase 토큰 검증', description: 'Supabase 토큰을 검증하고 JWT 토큰을 반환합니다' })
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        accessToken: { type: 'string', description: 'Supabase access token' },
+      },
+    },
+  })
+  @ApiResponse({ status: 200, description: '토큰 검증 성공' })
+  @ApiResponse({ status: 401, description: '토큰 검증 실패' })
+  async verifySupabaseToken(@Body() body: { accessToken: string }): Promise<ApiResponseDto<any>> {
+    try {
+      console.log('🔍 [AuthController] Supabase 토큰 검증 요청');
+      const userInfo = await this.authService.getSupabaseUserInfo(body.accessToken);
+      const result = await this.authService.login(userInfo);
+      return ApiResponseDto.successWithMessage('토큰 검증이 성공했습니다', result);
+    } catch (error) {
+      console.error('❌ [AuthController] Supabase 토큰 검증 실패:', error.message);
+      return ApiResponseDto.error('토큰 검증에 실패했습니다');
     }
   }
 

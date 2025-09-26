@@ -15,6 +15,7 @@ interface PlaylistsState {
 interface PlaylistsActions {
   fetchAllPlaylists: () => Promise<void>;
   fetchPlaylistById: (id: string) => Promise<void>;
+  getPlaylistById: (id: string) => Promise<PlaceGroup>;
   createPlaylist: (playlistData: CreatePlaceGroupDto) => Promise<void>;
   updatePlaylist: (id: string, playlistData: Partial<CreatePlaceGroupDto>) => Promise<void>;
   deletePlaylist: (id: string) => Promise<void>;
@@ -63,6 +64,15 @@ export const usePlaylistsStore = create<PlaylistsStore>((set, get) => ({
         isLoading: false,
         error: (error as any)?.response?.data?.message || '플레이리스트를 불러오는데 실패했습니다.',
       });
+    }
+  },
+
+  getPlaylistById: async (id: string) => {
+    try {
+      const playlist = await playlistsService.getPlaylistById(id);
+      return playlist;
+    } catch (error: unknown) {
+      throw error;
     }
   },
 

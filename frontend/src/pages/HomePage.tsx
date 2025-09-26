@@ -1,18 +1,14 @@
 import React from 'react';
 import HeroSection from '../components/sections/HeroSection';
 import FeaturesSection from '../components/sections/FeaturesSection';
-import PlacesSection from '../components/sections/PlacesSection';
 import PlaylistsSection from '../components/sections/PlaylistsSection';
-import CTASection from '../components/sections/CTASection';
 
 const HomePage: React.FC = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-lavender-500 via-pastel-lavender to-pastel-mint">
       <HeroSection />
       <FeaturesSection />
-      <PlacesSection />
       <PlaylistsSection />
-      <CTASection />
     </div>
   );
 };

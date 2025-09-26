@@ -23,18 +23,31 @@ let UsersService = class UsersService {
         this.usersRepository = usersRepository;
     }
     async create(createUserDto) {
+        console.log(`👤 [UsersService] 사용자 생성 시작: ${createUserDto.email}`);
         const existingUser = await this.usersRepository.findOne({
             where: { email: createUserDto.email },
         });
         if (existingUser) {
+            console.log(`❌ [UsersService] 이미 존재하는 이메일: ${createUserDto.email}`);
             throw new common_1.ConflictException('이미 존재하는 이메일입니다');
         }
-        const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+        console.log(`🔐 [UsersService] 원본 비밀번호: ${createUserDto.password}`);
+        const hashedPassword = createUserDto.password
+            ? await bcrypt.hash(createUserDto.password, 10)
+            : '';
+        console.log(`🔐 [UsersService] 해시된 비밀번호: ${hashedPassword}`);
+        console.log(`🔐 [UsersService] 해시 길이: ${hashedPassword.length}`);
+        if (createUserDto.password && hashedPassword) {
+            const testCompare = await bcrypt.compare(createUserDto.password, hashedPassword);
+            console.log(`🔐 [UsersService] 해시 검증 테스트: ${testCompare ? '성공' : '실패'}`);
+        }
         const user = this.usersRepository.create({
             ...createUserDto,
             password: hashedPassword,
         });
-        return this.usersRepository.save(user);
+        const savedUser = await this.usersRepository.save(user);
+        console.log(`✅ [UsersService] 사용자 생성 완료: ${savedUser.uuid}`);
+        return savedUser;
     }
     async findAll() {
         return this.usersRepository.find();
@@ -70,6 +83,22 @@ let UsersService = class UsersService {
             where: { email },
         });
         return !!user;
+    }
+    async resetPassword(email, newPassword) {
+        console.log(`🔐 [UsersService] 비밀번호 재설정 시작: ${email}`);
+        const user = await this.findByEmail(email);
+        if (!user) {
+            throw new common_1.NotFoundException('사용자를 찾을 수 없습니다');
+        }
+        console.log(`🔐 [UsersService] 새 비밀번호: ${newPassword}`);
+        const hashedPassword = await bcrypt.hash(newPassword, 10);
+        console.log(`🔐 [UsersService] 새 해시: ${hashedPassword}`);
+        const testCompare = await bcrypt.compare(newPassword, hashedPassword);
+        console.log(`🔐 [UsersService] 새 해시 검증 테스트: ${testCompare ? '성공' : '실패'}`);
+        user.password = hashedPassword;
+        const updatedUser = await this.usersRepository.save(user);
+        console.log(`✅ [UsersService] 비밀번호 재설정 완료: ${email}`);
+        return updatedUser;
     }
 };
 exports.UsersService = UsersService;

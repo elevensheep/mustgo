@@ -12,4 +12,5 @@ export declare class UsersService {
     remove(uuid: string): Promise<void>;
     findByEmail(email: string): Promise<User | null>;
     isEmailExists(email: string): Promise<boolean>;
+    resetPassword(email: string, newPassword: string): Promise<User>;
 }

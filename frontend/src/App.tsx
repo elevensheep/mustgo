@@ -10,9 +10,11 @@ import AuthSuccessPage from './pages/auth/AuthSuccessPage';
 import AuthErrorPage from './pages/auth/AuthErrorPage';
 import PlacesPage from './pages/PlacesPage';
 import PlaceDetailPage from './pages/PlaceDetailPage';
+import PlaylistDetailPage from './pages/PlaylistDetailPage';
 import PlaylistsPage from './pages/PlaylistsPage';
 import PlaylistCreatePage from './pages/PlaylistCreatePage';
 import ChatPage from './pages/ChatPage';
+import ProfilePage from './pages/ProfilePage';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -42,8 +44,10 @@ function App() {
                   <Route path="/places" element={<PlacesPage />} />
                   <Route path="/places/:id" element={<PlaceDetailPage />} />
                   <Route path="/playlists" element={<PlaylistsPage />} />
+                  <Route path="/playlists/:id" element={<PlaylistDetailPage />} />
                   <Route path="/playlists/create" element={<PlaylistCreatePage />} />
                   <Route path="/chat" element={<ChatPage />} />
+                  <Route path="/profile" element={<ProfilePage />} />
                 </Routes>
               </ErrorBoundary>
             </main>

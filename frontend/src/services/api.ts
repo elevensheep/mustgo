@@ -8,7 +8,7 @@ class ApiService {
   constructor() {
     this.api = axios.create({
       baseURL: API_BASE_URL,
-      timeout: 10000,
+      timeout: 30000, // 30초로 증가
       headers: {
         'Content-Type': 'application/json',
       },
@@ -53,8 +53,32 @@ class ApiService {
 
   // POST 요청
   async post<T>(url: string, data?: Record<string, unknown>): Promise<ApiResponse<T>> {
-    const response = await this.api.post<ApiResponse<T>>(url, data);
-    return response.data;
+    console.log(`📡 [ApiService] POST 요청: ${url}`);
+    console.log(`📡 [ApiService] 요청 데이터:`, data);
+    
+    try {
+      const response = await this.api.post<ApiResponse<T>>(url, data);
+      console.log(`✅ [ApiService] 응답 성공:`, response.data);
+      return response.data;
+    } catch (error: any) {
+      console.error(`❌ [ApiService] 요청 실패:`, error);
+      
+      // 상세한 에러 정보 로깅
+      if (error.response) {
+        console.error(`❌ [ApiService] 응답 에러:`, {
+          status: error.response.status,
+          statusText: error.response.statusText,
+          data: error.response.data,
+          headers: error.response.headers
+        });
+      } else if (error.request) {
+        console.error(`❌ [ApiService] 요청 에러:`, error.request);
+      } else {
+        console.error(`❌ [ApiService] 설정 에러:`, error.message);
+      }
+      
+      throw error;
+    }
   }
 
   // PUT 요청

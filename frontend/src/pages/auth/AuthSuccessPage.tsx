@@ -9,30 +9,42 @@ const AuthSuccessPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { setUser } = useAuthStore();
-  const token = searchParams.get('token');
+  
+  // URL fragment에서 access_token 추출
+  const getTokenFromFragment = () => {
+    const hash = window.location.hash;
+    const params = new URLSearchParams(hash.substring(1));
+    return params.get('access_token');
+  };
+  
+  const token = searchParams.get('token') || getTokenFromFragment();
 
   useEffect(() => {
     if (token) {
-      // 토큰을 저장하고 프로필 정보를 가져옴
-      localStorage.setItem('access_token', token);
+      console.log('🔑 [AuthSuccess] Supabase 토큰 받음:', token);
       
-      // 프로필 정보 가져오기
-      fetch('http://localhost:8000/api/auth/profile', {
+      // Supabase 토큰을 Backend로 전송하여 JWT 토큰 받기
+      fetch('http://localhost:8000/api/auth/supabase/verify', {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
+        body: JSON.stringify({ accessToken: token }),
       })
         .then(response => response.json())
         .then(data => {
+          console.log('📡 [AuthSuccess] JWT 토큰 응답:', data);
           if (data.success) {
-            setUser(data.data);
-            localStorage.setItem('user', JSON.stringify(data.data));
+            // JWT 토큰 저장
+            localStorage.setItem('access_token', data.data.access_token);
+            setUser(data.data.user);
+            localStorage.setItem('user', JSON.stringify(data.data.user));
+          } else {
+            console.error('❌ [AuthSuccess] JWT 토큰 생성 실패:', data.message);
           }
         })
         .catch(error => {
-          console.error('Failed to fetch profile:', error);
+          console.error('❌ [AuthSuccess] JWT 토큰 요청 실패:', error);
         });
     }
   }, [token, setUser]);
@@ -42,7 +54,7 @@ const AuthSuccessPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-lavender-500 via-pastel-peach to-pastel-rose flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Card className="text-center">
           <div className="flex justify-center mb-6">

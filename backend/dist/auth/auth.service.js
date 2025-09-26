@@ -22,11 +22,25 @@ let AuthService = class AuthService {
         this.supabaseService = supabaseService;
     }
     async validateUser(email, password) {
+        console.log(`🔍 [AuthService] 사용자 검증 시작: ${email}`);
         const user = await this.usersService.findByEmail(email);
-        if (user && await bcrypt.compare(password, user.password)) {
+        console.log(`👤 [AuthService] 사용자 조회 결과:`, user ? '사용자 존재' : '사용자 없음');
+        if (!user) {
+            console.log(`❌ [AuthService] 사용자를 찾을 수 없습니다: ${email}`);
+            return null;
+        }
+        console.log(`🔐 [AuthService] 비밀번호 검증 중...`);
+        console.log(`🔐 [AuthService] 입력된 비밀번호: ${password}`);
+        console.log(`🔐 [AuthService] 저장된 해시: ${user.password}`);
+        console.log(`🔐 [AuthService] 해시 길이: ${user.password.length}`);
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        console.log(`🔐 [AuthService] 비밀번호 검증 결과:`, isPasswordValid ? '성공' : '실패');
+        if (isPasswordValid) {
             const { password, ...result } = user;
+            console.log(`✅ [AuthService] 사용자 검증 성공:`, result.uuid);
             return result;
         }
+        console.log(`❌ [AuthService] 비밀번호가 일치하지 않습니다`);
         return null;
     }
     async login(user) {
@@ -49,28 +63,42 @@ let AuthService = class AuthService {
     }
     async getSupabaseUserInfo(accessToken) {
         try {
+            console.log('🔍 [AuthService] Supabase 사용자 정보 조회 시작');
             const supabaseUser = await this.supabaseService.getUserInfo(accessToken);
             if (!supabaseUser) {
+                console.error('❌ [AuthService] Supabase 사용자 정보가 없습니다');
                 return null;
             }
+            console.log('✅ [AuthService] Supabase 사용자 정보 조회 성공:', {
+                email: supabaseUser.email,
+                metadata: supabaseUser.user_metadata
+            });
             let localUser = await this.usersService.findByEmail(supabaseUser.email);
             if (!localUser) {
+                console.log('👤 [AuthService] 새 사용자 생성 중...');
                 const newUser = await this.usersService.create({
                     email: supabaseUser.email,
                     password: '',
                     nickname: supabaseUser.user_metadata?.full_name || supabaseUser.email.split('@')[0],
                 });
                 localUser = newUser;
+                console.log('✅ [AuthService] 새 사용자 생성 완료:', localUser.uuid);
             }
-            return {
+            else {
+                console.log('✅ [AuthService] 기존 사용자 찾음:', localUser.uuid);
+            }
+            const result = {
                 uuid: localUser.uuid,
                 email: localUser.email,
                 nickname: localUser.nickname,
                 supabaseId: supabaseUser.id,
             };
+            console.log('🎯 [AuthService] 최종 사용자 정보:', result);
+            return result;
         }
         catch (error) {
-            throw new common_1.UnauthorizedException('Supabase 사용자 정보 조회 실패');
+            console.error('❌ [AuthService] Supabase 사용자 정보 조회 실패:', error.message);
+            throw new common_1.UnauthorizedException(`Supabase 사용자 정보 조회 실패: ${error.message}`);
         }
     }
     async signInWithSupabase(provider) {

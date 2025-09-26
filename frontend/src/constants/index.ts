@@ -8,6 +8,7 @@ export const API_ENDPOINTS = {
     PROFILE: '/api/auth/profile',
     SUPABASE_LOGIN: (provider: string) => `/api/auth/supabase/${provider}`,
     SUPABASE_CALLBACK: '/api/auth/supabase/callback',
+    SUPABASE_VERIFY: '/api/auth/supabase/verify',
     SUPABASE_SIGNOUT: '/api/auth/supabase/signout',
   },
   

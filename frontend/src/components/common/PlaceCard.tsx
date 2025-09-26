@@ -18,7 +18,7 @@ const PlaceCard: React.FC<PlaceCardProps> = memo(({ place, viewMode = 'grid' }) 
             {place.imageUrl ? (
               <img
                 src={place.imageUrl}
-                alt={place.placeName}
+                alt={place.name}
                 className="w-full h-full object-cover rounded-lg"
                 loading="lazy"
               />
@@ -28,7 +28,7 @@ const PlaceCard: React.FC<PlaceCardProps> = memo(({ place, viewMode = 'grid' }) 
           </div>
           <div className="ml-4 flex-1">
             <h3 className="font-semibold text-lg text-gray-900 mb-2">
-              {place.placeName}
+              {place.name}
             </h3>
             {place.description && (
               <p className="text-gray-600 text-sm mb-3 line-clamp-2">
@@ -58,7 +58,7 @@ const PlaceCard: React.FC<PlaceCardProps> = memo(({ place, viewMode = 'grid' }) 
           {place.imageUrl ? (
             <img
               src={place.imageUrl}
-              alt={place.placeName}
+              alt={place.name}
               className="w-full h-full object-cover rounded-lg"
               loading="lazy"
             />
@@ -67,7 +67,7 @@ const PlaceCard: React.FC<PlaceCardProps> = memo(({ place, viewMode = 'grid' }) 
           )}
         </div>
         <h3 className="font-semibold text-lg text-gray-900 mb-2">
-          {place.placeName}
+          {place.name}
         </h3>
         {place.description && (
           <p className="text-gray-600 text-sm mb-3 line-clamp-2">
@@ -92,3 +92,6 @@ const PlaceCard: React.FC<PlaceCardProps> = memo(({ place, viewMode = 'grid' }) 
 PlaceCard.displayName = 'PlaceCard';
 
 export default PlaceCard;
+
+
+

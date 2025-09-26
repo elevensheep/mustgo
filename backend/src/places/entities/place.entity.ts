@@ -16,11 +16,26 @@ export class Place {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ name: 'place_id', unique: true, nullable: false })
+  @Column({ name: 'place_id', unique: true, nullable: true })
   placeId: string;
 
-  @Column({ name: 'place_name', nullable: false })
-  placeName: string;
+  @Column({ name: 'name', nullable: false })
+  name: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ name: 'road_address', nullable: true })
+  roadAddress: string;
+
+  @Column({ nullable: true })
+  category: string;
+
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  url: string;
 
   @Column({ nullable: true })
   description: string;
@@ -32,11 +47,17 @@ export class Place {
   @JoinColumn({ name: 'user_id', referencedColumnName: 'uuid' })
   user: User;
 
-  @Column({ nullable: true })
+  @Column({ type: 'double precision', nullable: false })
   latitude: number;
 
-  @Column({ nullable: true })
+  @Column({ type: 'double precision', nullable: false })
   longitude: number;
+
+  @Column({ nullable: true })
+  distance: number;
+
+  @Column({ name: 'is_from_api', default: false })
+  isFromAPI: boolean;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

@@ -4,6 +4,8 @@ import { MapPin, Star, Clock, Phone, Globe, Heart, Share2, MessageCircle, ArrowL
 import { usePlacesStore } from '../stores/places.store';
 import Card from '../components/ui/Card';
 import Button from '../components/ui/Button';
+import KakaoMap from '../components/map/KakaoMap';
+import type { MapLocation } from '../types';
 
 const PlaceDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -198,15 +200,21 @@ const PlaceDetailPage: React.FC = () => {
             {/* Map */}
             <Card>
               <h3 className="text-lg font-semibold text-gray-900 mb-4">위치</h3>
-              <div className="aspect-square bg-gray-200 rounded-lg flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <MapPin className="w-8 h-8 mx-auto mb-2" />
-                  <p className="text-sm">지도</p>
-                </div>
+              <div className="rounded-lg overflow-hidden">
+                <KakaoMap
+                  initialLocation={{
+                    lat: selectedPlace.latitude,
+                    lng: selectedPlace.longitude,
+                    address: selectedPlace.address || selectedPlace.name
+                  }}
+                  height="400px"
+                  showSearch={false}
+                />
               </div>
               <div className="mt-4 text-sm text-gray-600">
                 <p>위도: {selectedPlace.latitude}</p>
                 <p>경도: {selectedPlace.longitude}</p>
+                {selectedPlace.address && <p>주소: {selectedPlace.address}</p>}
               </div>
             </Card>
 

@@ -10,26 +10,64 @@ export class PlaceResponseDto {
   @ApiProperty({
     description: '맛집 고유 ID',
     example: 'place_12345',
+    required: false,
   })
-  placeId: string;
+  placeId?: string;
 
   @ApiProperty({
     description: '맛집 이름',
     example: '맛있는 식당',
   })
-  placeName: string;
+  name: string;
+
+  @ApiProperty({
+    description: '주소',
+    example: '서울시 강남구 테헤란로 123',
+    required: false,
+  })
+  address?: string;
+
+  @ApiProperty({
+    description: '도로명 주소',
+    example: '서울시 강남구 테헤란로 123',
+    required: false,
+  })
+  roadAddress?: string;
+
+  @ApiProperty({
+    description: '카테고리',
+    example: '한식',
+    required: false,
+  })
+  category?: string;
+
+  @ApiProperty({
+    description: '전화번호',
+    example: '02-1234-5678',
+    required: false,
+  })
+  phone?: string;
+
+  @ApiProperty({
+    description: '웹사이트 URL',
+    example: 'https://example.com',
+    required: false,
+  })
+  url?: string;
 
   @ApiProperty({
     description: '맛집 설명',
     example: '정말 맛있는 식당입니다',
+    required: false,
   })
-  description: string;
+  description?: string;
 
   @ApiProperty({
     description: '이미지 URL',
     example: 'https://example.com/image.jpg',
+    required: false,
   })
-  imageUrl: string;
+  imageUrl?: string;
 
   @ApiProperty({
     description: '위도',
@@ -42,6 +80,20 @@ export class PlaceResponseDto {
     example: 126.9780,
   })
   longitude: number;
+
+  @ApiProperty({
+    description: '거리',
+    example: 100,
+    required: false,
+  })
+  distance?: number;
+
+  @ApiProperty({
+    description: 'API에서 가져온 데이터인지 여부',
+    example: false,
+    required: false,
+  })
+  isFromAPI?: boolean;
 
   @ApiProperty({
     description: '생성일시',

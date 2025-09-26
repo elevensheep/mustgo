@@ -19,9 +19,10 @@ __decorate([
     (0, swagger_1.ApiProperty)({
         description: '맛집 고유 ID',
         example: 'place_12345',
+        required: false,
     }),
     (0, class_validator_1.IsString)(),
-    (0, class_validator_1.IsNotEmpty)({ message: '맛집 ID는 필수입니다' }),
+    (0, class_validator_1.IsOptional)(),
     __metadata("design:type", String)
 ], CreatePlaceDto.prototype, "placeId", void 0);
 __decorate([
@@ -32,7 +33,57 @@ __decorate([
     (0, class_validator_1.IsString)(),
     (0, class_validator_1.IsNotEmpty)({ message: '맛집 이름은 필수입니다' }),
     __metadata("design:type", String)
-], CreatePlaceDto.prototype, "placeName", void 0);
+], CreatePlaceDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '주소',
+        example: '서울시 강남구 테헤란로 123',
+        required: false,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreatePlaceDto.prototype, "address", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '도로명 주소',
+        example: '서울시 강남구 테헤란로 123',
+        required: false,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreatePlaceDto.prototype, "roadAddress", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '카테고리',
+        example: '한식',
+        required: false,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreatePlaceDto.prototype, "category", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '전화번호',
+        example: '02-1234-5678',
+        required: false,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreatePlaceDto.prototype, "phone", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '웹사이트 URL',
+        example: 'https://example.com',
+        required: false,
+    }),
+    (0, class_validator_1.IsString)(),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", String)
+], CreatePlaceDto.prototype, "url", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         description: '맛집 설명',
@@ -66,20 +117,37 @@ __decorate([
     (0, swagger_1.ApiProperty)({
         description: '위도',
         example: 37.5665,
-        required: false,
     }),
     (0, class_validator_1.IsNumber)(),
-    (0, class_validator_1.IsOptional)(),
+    (0, class_validator_1.IsNotEmpty)({ message: '위도는 필수입니다' }),
     __metadata("design:type", Number)
 ], CreatePlaceDto.prototype, "latitude", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         description: '경도',
         example: 126.9780,
+    }),
+    (0, class_validator_1.IsNumber)(),
+    (0, class_validator_1.IsNotEmpty)({ message: '경도는 필수입니다' }),
+    __metadata("design:type", Number)
+], CreatePlaceDto.prototype, "longitude", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '거리',
+        example: 100,
         required: false,
     }),
     (0, class_validator_1.IsNumber)(),
     (0, class_validator_1.IsOptional)(),
     __metadata("design:type", Number)
-], CreatePlaceDto.prototype, "longitude", void 0);
+], CreatePlaceDto.prototype, "distance", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'API에서 가져온 데이터인지 여부',
+        example: false,
+        required: false,
+    }),
+    (0, class_validator_1.IsOptional)(),
+    __metadata("design:type", Boolean)
+], CreatePlaceDto.prototype, "isFromAPI", void 0);
 //# sourceMappingURL=create-place.dto.js.map

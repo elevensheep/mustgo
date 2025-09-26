@@ -25,6 +25,7 @@ __decorate([
     (0, swagger_1.ApiProperty)({
         description: '맛집 고유 ID',
         example: 'place_12345',
+        required: false,
     }),
     __metadata("design:type", String)
 ], PlaceResponseDto.prototype, "placeId", void 0);
@@ -34,11 +35,52 @@ __decorate([
         example: '맛있는 식당',
     }),
     __metadata("design:type", String)
-], PlaceResponseDto.prototype, "placeName", void 0);
+], PlaceResponseDto.prototype, "name", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '주소',
+        example: '서울시 강남구 테헤란로 123',
+        required: false,
+    }),
+    __metadata("design:type", String)
+], PlaceResponseDto.prototype, "address", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '도로명 주소',
+        example: '서울시 강남구 테헤란로 123',
+        required: false,
+    }),
+    __metadata("design:type", String)
+], PlaceResponseDto.prototype, "roadAddress", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '카테고리',
+        example: '한식',
+        required: false,
+    }),
+    __metadata("design:type", String)
+], PlaceResponseDto.prototype, "category", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '전화번호',
+        example: '02-1234-5678',
+        required: false,
+    }),
+    __metadata("design:type", String)
+], PlaceResponseDto.prototype, "phone", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '웹사이트 URL',
+        example: 'https://example.com',
+        required: false,
+    }),
+    __metadata("design:type", String)
+], PlaceResponseDto.prototype, "url", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         description: '맛집 설명',
         example: '정말 맛있는 식당입니다',
+        required: false,
     }),
     __metadata("design:type", String)
 ], PlaceResponseDto.prototype, "description", void 0);
@@ -46,6 +88,7 @@ __decorate([
     (0, swagger_1.ApiProperty)({
         description: '이미지 URL',
         example: 'https://example.com/image.jpg',
+        required: false,
     }),
     __metadata("design:type", String)
 ], PlaceResponseDto.prototype, "imageUrl", void 0);
@@ -63,6 +106,22 @@ __decorate([
     }),
     __metadata("design:type", Number)
 ], PlaceResponseDto.prototype, "longitude", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: '거리',
+        example: 100,
+        required: false,
+    }),
+    __metadata("design:type", Number)
+], PlaceResponseDto.prototype, "distance", void 0);
+__decorate([
+    (0, swagger_1.ApiProperty)({
+        description: 'API에서 가져온 데이터인지 여부',
+        example: false,
+        required: false,
+    }),
+    __metadata("design:type", Boolean)
+], PlaceResponseDto.prototype, "isFromAPI", void 0);
 __decorate([
     (0, swagger_1.ApiProperty)({
         description: '생성일시',

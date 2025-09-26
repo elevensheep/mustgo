@@ -29,6 +29,18 @@ __decorate([
     __metadata("design:type", String)
 ], PlaceGroup.prototype, "description", void 0);
 __decorate([
+    (0, typeorm_1.Column)({ type: 'double precision', nullable: true }),
+    __metadata("design:type", Number)
+], PlaceGroup.prototype, "latitude", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ type: 'double precision', nullable: true }),
+    __metadata("design:type", Number)
+], PlaceGroup.prototype, "longitude", void 0);
+__decorate([
+    (0, typeorm_1.Column)({ nullable: true }),
+    __metadata("design:type", String)
+], PlaceGroup.prototype, "address", void 0);
+__decorate([
     (0, typeorm_1.ManyToOne)(() => user_entity_1.User, { lazy: true }),
     (0, typeorm_1.JoinColumn)({ name: 'user_id', referencedColumnName: 'uuid' }),
     __metadata("design:type", user_entity_1.User)

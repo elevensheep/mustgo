@@ -17,13 +17,15 @@ const common_1 = require("@nestjs/common");
 const swagger_1 = require("@nestjs/swagger");
 const place_groups_service_1 = require("./place-groups.service");
 const api_response_dto_1 = require("../common/dto/api-response.dto");
+const create_place_group_dto_1 = require("./dto/create-place-group.dto");
+const playlist_response_dto_1 = require("./dto/playlist-response.dto");
 let PlaceGroupsController = class PlaceGroupsController {
     constructor(placeGroupsService) {
         this.placeGroupsService = placeGroupsService;
     }
     async create(createPlaceGroupDto) {
-        const placeGroup = await this.placeGroupsService.create(createPlaceGroupDto.name, createPlaceGroupDto.description, createPlaceGroupDto.userId);
-        return api_response_dto_1.ApiResponse.successWithMessage('맛집 그룹이 성공적으로 생성되었습니다', placeGroup);
+        const placeGroup = await this.placeGroupsService.create(createPlaceGroupDto);
+        return api_response_dto_1.ApiResponse.successWithMessage('플레이리스트가 성공적으로 생성되었습니다', placeGroup);
     }
     async findAll() {
         const placeGroups = await this.placeGroupsService.findAll();
@@ -37,25 +39,25 @@ let PlaceGroupsController = class PlaceGroupsController {
 exports.PlaceGroupsController = PlaceGroupsController;
 __decorate([
     (0, common_1.Post)('create'),
-    (0, swagger_1.ApiOperation)({ summary: '새 맛집 그룹 생성', description: '새로운 맛집 그룹을 생성합니다' }),
-    (0, swagger_1.ApiResponse)({ status: 201, description: '맛집 그룹 생성 성공' }),
+    (0, swagger_1.ApiOperation)({ summary: '새 플레이리스트 생성', description: '새로운 플레이리스트를 생성합니다' }),
+    (0, swagger_1.ApiResponse)({ status: 201, description: '플레이리스트 생성 성공', type: playlist_response_dto_1.PlaylistResponseDto }),
     __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [create_place_group_dto_1.CreatePlaceGroupDto]),
     __metadata("design:returntype", Promise)
 ], PlaceGroupsController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)('all'),
-    (0, swagger_1.ApiOperation)({ summary: '모든 맛집 그룹 조회', description: '등록된 모든 맛집 그룹을 조회합니다' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: '맛집 그룹 목록 조회 성공' }),
+    (0, swagger_1.ApiOperation)({ summary: '모든 플레이리스트 조회', description: '등록된 모든 플레이리스트를 조회합니다' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: '플레이리스트 목록 조회 성공', type: [playlist_response_dto_1.PlaylistResponseDto] }),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", Promise)
 ], PlaceGroupsController.prototype, "findAll", null);
 __decorate([
     (0, common_1.Get)(':id'),
-    (0, swagger_1.ApiOperation)({ summary: '맛집 그룹 조회', description: '특정 맛집 그룹을 조회합니다' }),
-    (0, swagger_1.ApiResponse)({ status: 200, description: '맛집 그룹 조회 성공' }),
+    (0, swagger_1.ApiOperation)({ summary: '플레이리스트 조회', description: '특정 플레이리스트를 조회합니다' }),
+    (0, swagger_1.ApiResponse)({ status: 200, description: '플레이리스트 조회 성공', type: playlist_response_dto_1.PlaylistResponseDto }),
     __param(0, (0, common_1.Param)('id')),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String]),
